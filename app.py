@@ -22,6 +22,11 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(todo_bp)
 
+    # Basic health endpoint for platforms' health checks
+    @app.route("/")
+    def index():
+        return {"status": "ok"}, 200
+
     return app
 
 app = create_app()
