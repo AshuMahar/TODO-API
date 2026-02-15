@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Basic lint / sanity checks
+      run: |
+        python -m py_compile app.py || true
+        echo "Installed packages:"
+        pip list
+
+    # Optional: trigger Render deploy via API if you add secrets RENDER_API_KEY and RENDER_SERVICE_ID
+    - name: Trigger Render deploy (optional)
+      if: ${{ secrets.RENDER_API_KEY && secrets.RENDER_SERVICE_ID }}
+      run: |
+        echo "Triggering Render deploy..."
+        curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"clearCache":true}'

@@ -12,3 +12,6 @@ Next recommended steps I can do for you (choose one):
 - Create the remote GitHub repo and push (requires `gh` CLI or manual remote URL).  
 - Walk through creating MongoDB Atlas and setting the `MONGO_URI` env var.  
 - Connect the GitHub repo to Render and deploy the service.
+
+6) Added GitHub Actions CI workflow: `.github/workflows/ci.yml` — installs dependencies and runs basic checks on push to `main`. It also contains an optional step to trigger a Render deploy if `RENDER_API_KEY` and `RENDER_SERVICE_ID` are configured as repository secrets.
+7) Added `RENDER_SETUP.md` with step-by-step instructions to create a Render service and set environment variables.
