@@ -1,0 +1,7 @@
+Flask
+flask-pymongo
+flask-jwt-extended
+python-dotenv
+pymongo
+dnspython
+gunicorn

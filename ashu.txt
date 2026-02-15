@@ -1,0 +1,14 @@
+Changes made to the original project (for Ashu):
+
+1) Added `Procfile` — start command for production: `web: gunicorn app:app`.
+2) Added `.env.example` — documents required environment variables (`MONGO_URI`, `JWT_SECRET_KEY`, `PORT`).
+3) Added `.gitignore` — ignores `myvenv`, `.env`, and common artifacts.
+4) Added `README.md` — setup, deployment, and GitHub/Render/MongoDB Atlas guidance.
+5) Initialized a local git repository and created an initial commit (done locally).
+
+No changes were made to application logic: `app.py` already reads `MONGO_URI` and `JWT_SECRET_KEY` from environment and uses `python-dotenv`.
+
+Next recommended steps I can do for you (choose one):
+- Create the remote GitHub repo and push (requires `gh` CLI or manual remote URL).  
+- Walk through creating MongoDB Atlas and setting the `MONGO_URI` env var.  
+- Connect the GitHub repo to Render and deploy the service.
