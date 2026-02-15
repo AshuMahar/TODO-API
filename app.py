@@ -1,6 +1,6 @@
 from flask import Flask
+from flask_cors import CORS
 from dotenv import load_dotenv
-import logging
 import os
 from extensions import mongodb, jwt
 from routes.auth_routes import auth_bp
@@ -11,6 +11,15 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     
+    # Enable CORS for all routes
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:3000", "http://localhost:5173", "https://*"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
+    
     # Load config from environment
     mongo_uri = os.getenv("MONGO_URI")
     jwt_secret = os.getenv("JWT_SECRET_KEY")
@@ -20,20 +29,15 @@ def create_app():
         try:
             mongodb.init_app(app)
         except Exception:
-            logging.exception("Failed to initialize MongoDB with provided MONGO_URI")
-    else:
-        logging.warning("MONGO_URI not set — skipping MongoDB initialization. DB features will be disabled until set.")
-
+            pass
+    
     if jwt_secret:
         app.config["JWT_SECRET_KEY"] = jwt_secret
-    else:
-        logging.warning("JWT_SECRET_KEY not set — JWT features will be disabled until set.")
-
-    # Initialize JWT (safe to call even if secret missing; errors will surface when used)
+    
     try:
         jwt.init_app(app)
     except Exception:
-        logging.exception("Failed to initialize JWT extension")
+        pass
 
     # Register blueprints
     app.register_blueprint(auth_bp)
