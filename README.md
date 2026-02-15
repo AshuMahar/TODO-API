@@ -4,6 +4,23 @@ Simple Flask TODO API with JWT authentication and MongoDB.
 
 **🌐 Live Demo**: https://todo-api-zf6r.onrender.com
 
+## API Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|----------------|
+| POST | `/api/v1/auth/register` | User signup | ❌ No |
+| POST | `/api/v1/auth/login` | JWT login | ❌ No |
+| GET | `/api/v1/auth/profile` | Get user profile | ✅ Yes |
+| POST | `/api/v1/todos` | Create todo | ✅ Yes |
+| GET | `/api/v1/todos?page=1&limit=5` | List todos with pagination | ✅ Yes |
+
+**Base URL**: https://todo-api-zf6r.onrender.com
+
+### Quick Test (Postman)
+1. Register: `POST /api/v1/auth/register` with `{"name":"User","email":"user@example.com","password":"pass123"}`
+2. Login: `POST /api/v1/auth/login` with `{"email":"user@example.com","password":"pass123"}` → copy `access_token`
+3. Use token: Add header `Authorization: Bearer <token>` to protected endpoints
+
 Setup (local):
 
 1. Create and activate virtualenv:
