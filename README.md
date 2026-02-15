@@ -6,6 +6,43 @@ Simple Flask TODO API with JWT authentication and MongoDB.
 
 ## API Endpoints
 
+## New endpoints
+
+- **Update Todo**
+	- `PUT /api/v1/todos/<todo_id>`
+	- Requires `Authorization: Bearer <access_token>` header
+	- Body (JSON): `{ "title": "...", "desc": "...", "is_complete": true|false }`
+
+- **Delete Todo**
+	- `DELETE /api/v1/todos/<todo_id>`
+	- Requires `Authorization: Bearer <access_token>` header
+
+- **Refresh Access Token**
+	- `POST /api/v1/auth/refresh`
+	- Requires `Authorization: Bearer <refresh_token>` header
+	- Response: `{ "access_token": "..." }`
+
+- **Logout (revoke refresh token)**
+	- `POST /api/v1/auth/logout`
+	- Requires `Authorization: Bearer <refresh_token>` header
+	- Stores the token's `jti` in the `token_blacklist` collection so it cannot be reused
+
+Example curl to refresh:
+
+```
+curl -X POST \
+	-H "Authorization: Bearer <REFRESH_TOKEN>" \
+	https://your-host/api/v1/auth/refresh
+```
+
+Example curl to logout:
+
+```
+curl -X POST \
+	-H "Authorization: Bearer <REFRESH_TOKEN>" \
+	https://your-host/api/v1/auth/logout
+```
+
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|----------------|
 | POST | `/api/v1/auth/register` | User signup | ❌ No |

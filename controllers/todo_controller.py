@@ -2,6 +2,7 @@ from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from bson import ObjectId
 from extensions import mongodb
+from pymongo import ReturnDocument
 
 @jwt_required()
 def create_todo():
@@ -40,3 +41,52 @@ def get_todos():
         "limit": limit,
         "todos": result
     }
+
+
+@jwt_required()
+def update_todo(todo_id):
+    user_id = get_jwt_identity()
+    data = request.get_json()
+
+    updated = mongodb.db.todos.find_one_and_update(
+        {
+            "_id": ObjectId(todo_id),
+            "user_id": ObjectId(user_id)
+        },
+        {
+            "$set": {
+                "title": data.get("title"),
+                "desc": data.get("desc"),
+                "is_complete": data.get("is_complete")
+            }
+        },
+        return_document=ReturnDocument.AFTER
+    )
+
+    if not updated:
+        return {"message": "Todo not found"}, 404
+
+    return {
+        "message": "Todo updated",
+        "todo": {
+            "id": str(updated["_id"]),
+            "title": updated["title"],
+            "desc": updated.get("desc", ""),
+            "is_complete": updated["is_complete"]
+        }
+    }
+
+
+@jwt_required()
+def delete_todo(todo_id):
+    user_id = get_jwt_identity()
+
+    result = mongodb.db.todos.delete_one({
+        "_id": ObjectId(todo_id),
+        "user_id": ObjectId(user_id)
+    })
+
+    if result.deleted_count == 0:
+        return {"message": "Todo not found"}, 404
+
+    return {"message": "Todo deleted successfully"}
